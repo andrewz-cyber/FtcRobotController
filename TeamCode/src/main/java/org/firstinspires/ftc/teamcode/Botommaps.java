@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class Botommaps {
@@ -18,13 +19,23 @@ public class Botommaps {
         //xy coords
         double x = 0;
         double y = 0;
-        //maximum
-        double max;
 
-        if (gamepad.dpad_up) y = 1;
-        if (gamepad.dpad_down) y = -1;
-        if (gamepad.dpad_left) x = -1;
-        if (gamepad.dpad_right) x = 1;
+        if (gamepad.dpad_up) y = 0.8;
+        if (gamepad.dpad_down) y = -0.8;
+        if (gamepad.dpad_left) x = -0.8;
+        if (gamepad.dpad_right) x = 0.8;
+        if (gamepad.right_bumper) {
+            robot.Left_Front.setPower(1);
+            robot.Right_Front.setPower(-1);
+            robot.Left_Back.setPower(1);
+            robot.Right_Back.setPower(-1);
+        }
+        if (gamepad.left_bumper) {
+            robot.Left_Front.setPower(-1);
+            robot.Right_Front.setPower(1);
+            robot.Left_Back.setPower(-1);
+            robot.Right_Back.setPower(1);
+        }
 
         double lf = y + x;
         double rf = y - x;
@@ -32,15 +43,15 @@ public class Botommaps {
         double rb = y + x;
 
         //prevents them from going above 1
-        max = Math.max(1,Math.abs(lf));
-        max = Math.max(1,Math.abs(rf));
-        max = Math.max(1,Math.abs(lb));
-        max = Math.max(1,Math.abs(rb));
+        double max1 = Math.max(1,Math.abs(lf));
+        double max2 = Math.max(1,Math.abs(rf));
+        double max3 = Math.max(1,Math.abs(lb));
+        double max4 = Math.max(1,Math.abs(rb));
 
-        lf /= max;
-        rf /= max;
-        lb /= max;
-        rb /= max;
+        lf /= max1;
+        rf /= max2;
+        lb /= max3;
+        rb /= max4;
 
         robot.Left_Front.setPower(lf);
         robot.Right_Front.setPower(rf);
@@ -103,10 +114,10 @@ public class Botommaps {
 
     public void armCode(){
         if(gamepad.a){
-            robot.runIntake(1);
+            robot.runIntake(0.6);
         }
         else if(gamepad.b){
-            robot.runIntake(-1);
+            robot.runIntake(-0.6);
         }
         else{
             robot.runIntake(0);
@@ -119,4 +130,29 @@ public class Botommaps {
             robot.runShooter(0);
         }
     }
+
+//    public void holonomicDrive(){
+//        double x = gamepad.left_stick_x;
+//        double y = -gamepad.left_stick_y;
+//        double rx = gamepad.right_stick_x > 0.1 || gamepad.right_stick_x < -0.1 ? gamepad.right_stick_x : 0;
+//
+//        double flPower = y + x + rx;
+//        double frPower = y - x - rx;
+//        double bl = y - x + rx;
+//        double br = y + x - rx;
+//
+//        // Normalize powers so they are within [-1, 1]
+//        double max = Math.max(Math.abs(flPower), Math.max(Math.abs(frPower), Math.max(Math.abs(bl), Math.abs(br))));
+//        if (max > 1.0) {
+//            flPower /= max;
+//            frPower /= max;
+//            bl /= max;
+//            br /= max;
+//        }
+//
+//        Front_Left.setPower(flPower);
+//        FrontRight.setPower(frPower);
+//        backLeft.setPower(bl);
+//        backRight.setPower(br);
+    //}
 }
